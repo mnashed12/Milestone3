@@ -1,0 +1,357 @@
+package shop;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Game {
+
+	public static void main(String[] args) {
+		
+		Product products[] = new Product[6];																//Creates array with product objects
+		products[0] = new Product("Potion", "heals", 3, 3);
+		products[1] = new Gun("Gun", "shoot em down", 50, 1);
+		products[2] = new Axe("Axe", "good for chopping", 10, 4);
+		products[3] = new lightarmor("Light_armor", "provides some protection", 12, 11);
+		products[4] = new heavyarmor("Heavy_armor", "provides the best protection", 25, 2);
+		products[5] = new Health("Health_pack", "better than a potion", 6, 10);		
+		
+		Storefront store = new Storefront();																//creates Store object
+		inventorymanager manager = new inventorymanager();													//creates inventory manager
+		ShoppingCart Cart = new ShoppingCart();																//creates shopping cart
+														
+		Scanner scnr = new Scanner(System.in);																//allows user input
+		
+		System.out.println("Hello! Welcome to Storefront, press the q key to view the store or p to exit");	//prompt user to enter store or leave
+		if (scnr.nextLine().equals("q")) {																			
+			for (int x=0;x<products.length;++x)
+				store.viewProductInfo(products[x]);
+		} else {																	
+			System.out.println("You can only view the store for now");		
+	}
+		
+		System.out.println("Add an item to your cart by typing the name");
+		for (int x = 0;x<=products.length;++x) {																		//loop as many times as there are items
+		if (scnr.nextLine().equals(products[x].getName())) {
+			Cart.purchaseProduct(products[x]);																			//add item to cart																			
+			break;
+			}
+		}
+		
+		System.out.println(" ");
+		System.out.println("Your shopping cart contains " + Cart.viewCart());											//viewCart
+		System.out.println("To purchase items in shopping cart, type purchase or to remove the item type remove");		//purchase or remove items from shopping cart
+		for (int x = 0;x<products.length;++x) {																			//loop issue
+		if (scnr.nextLine().equals("purchase")) {																		
+			store.purchaseProduct(products[x]);																			//purchase from store(removes quantity)
+			manager.addItem(products[x]);																				//add item to inventory
+		System.out.println("Thank you for your purchase");
+		} else if (scnr.nextLine().equals("remove")) {																	
+			manager.removeItem(products[x]);																			//remove item from shopping cart
+			System.out.println("You removed the item from your shopping cart");
+		}
+		
+		
+		System.out.println("To view your inventory, type view or else the store will close");
+		if (scnr.nextLine().equals("view")) {																			//view inventory
+			System.out.println(manager.viewInventory());
+			} else {
+				System.out.println("Goodbye!");
+			}
+		
+		Arrays.sort(products);																							//sorts products by name
+		for(x=0;x<6;++x) {
+			System.out.println(products[x].getName());
+		}
+		}
+		scnr.close();																									//close scanner
+	}
+}
+
+package shop;
+
+public class Product {
+		
+	/**
+	 * name
+	 */
+		protected String name;
+		/**
+		 * description
+		 */
+		private String description;
+		/**
+		 * price
+		 */
+		private int price;
+		/**
+		 * quantity
+		 */
+		private int quantity;
+		
+		/**
+		 * product object parameters
+		 * @param name
+		 * @param description
+		 * @param price
+		 * @param quantity
+		 */
+		public Product(String name, String description, int price, int quantity) {
+			this.name = name;
+			this.description = description;
+			this.price = price;
+			this.quantity = quantity; 
+		}
+		/**
+		 * product object initialization
+		 */
+		public Product() {
+			System.out.println("Product object constructed");
+		}
+		/**
+		 * get product name
+		 * @return
+		 */
+		public String getName() {
+			return name;
+		}
+		/**
+		 * set product name
+		 * @param name
+		 */
+		public void setName(String name) {
+			this.name = name;
+		}
+		/**
+		 * get product description
+		 * @return
+		 */
+		public String getDescription() {
+			return description;
+		}
+		/**
+		 * set product description
+		 * @param description
+		 */
+		public void setDescription(String description) {
+			this.description = description;
+		}
+		/**
+		 * get product price
+		 * @return
+		 */
+		public int getPrice() {
+			return price;
+		}
+		/**
+		 * set product price
+		 * @param price
+		 */
+		public void setPrice(int price) {
+			this.price = price;
+		}
+		/**
+		 * get product quantity
+		 * @return
+		 */
+		public int getQuantity() {
+			return quantity;
+		}
+		/**
+		 * set product quantity
+		 * @param quantity
+		 */
+		public void setQuantity(int quantity) {
+			this.quantity = quantity;
+		}
+		/**
+		 * display product details
+		 */
+		public void displayProductDetails() {
+			System.out.println("Product name: " + name);
+			System.out.println("Product description: " + description);
+			System.out.println("Product price: " + price);
+			System.out.println("Product quantity: " + quantity);
+		}
+		/**
+		 * compareTo method
+		 * @param product
+		 * @return
+		 */
+		public int compareTo(Product product) {
+			int value = this.name.compareTo(product.name);
+			if(value == 0) {
+				return this.name.compareTo(product.name);
+			} else {
+				return value;
+			}
+		}
+}
+
+package shop;
+
+import java.util.ArrayList;
+
+public class inventory {
+	/**
+	 * view inventory
+	 * @param product
+	 */	
+	public void removeItem(Product product) {
+		product.setQuantity(product.getQuantity() + 1);
+	}
+	/**
+	 * add item to inventory
+	 * @param product
+	 */
+	public void addItem(Product product) {
+		product.setQuantity(product.getQuantity() - 1);
+	}
+	/**
+	 * remove item from inventory
+	 * @return
+	 */
+	public ArrayList<String> viewInventory() {
+		return null;
+	}
+}
+package shop;
+
+public class Storefront {
+	
+	/**
+	 * purchase product from store
+	 * @param productx
+	 */
+	public void purchaseProduct(Product product) {
+		if (product.getQuantity() >= 1) {
+		product.setQuantity(product.getQuantity() - 1);
+	} else {
+		System.out.println("no products avialable");
+	}
+}
+	/**
+	 * cancel product purchase
+	 * @param product
+	 */
+	public void cancelPurchase(Product product) {
+		product.setQuantity(product.getQuantity() + 1);
+	}
+	/**
+	 * view product info
+	 * @param product
+	 */
+	public void viewProductInfo(Product product) {
+		System.out.println(product.getName());
+		System.out.println(product.getDescription());
+		System.out.println(product.getPrice());
+		System.out.println(product.getQuantity());
+		
+	}
+}
+
+package shop;
+import java.util.ArrayList;
+
+public class ShoppingCart extends Storefront{
+	public ShoppingCart() {
+		super();
+	}
+	
+	ArrayList<String> ShoppingCart = new ArrayList<>();
+	
+	//adds product to shopping cart
+	@Override
+	public void purchaseProduct(Product product) {
+		ShoppingCart.add(product.getName());
+		System.out.println("Item added");
+	}
+	//removes product from shopping cart
+	@Override
+	public void cancelPurchase(Product product) {
+		ShoppingCart.remove(product.getName());
+	}
+	/**
+	 * remove everything from shoppingcart
+	 */
+	public void emptyCart() {
+		ShoppingCart.clear();
+	}
+	/**
+	 * view items in shopping cart
+	 * @return
+	 */
+	public ArrayList<String> viewCart() {
+		return(ShoppingCart);
+	}
+}
+
+package shop;
+
+import java.util.ArrayList;
+
+public class inventorymanager extends inventory{
+	public inventorymanager() {
+		super();
+	}
+	
+	ArrayList<String> manager = new ArrayList<>();
+	
+	/**
+	 * views inventory
+	 */
+	@Override
+	public ArrayList<String> viewInventory() {
+		return(manager);
+	}
+	/**
+	 * removes item from inventory
+	 */
+	@Override
+	public void removeItem(Product product) {
+		manager.remove(product.getName());
+	}
+	/**
+	 * adds item to inventory
+	 */
+	@Override
+	public void addItem(Product product) {
+		manager.add(product.getName());
+	}
+	/**
+	 * returns inventory
+	 */
+	public void returnInventory() {
+		manager.clear();
+	}
+}
+
+package shop;
+
+public interface WeaponsInterface {
+	public void name();
+}
+
+package shop;
+
+public class Axe extends Product implements WeaponsInterface, Comparable<Product>{
+	public Axe(String name, String description, int price, int quantity) {
+		super(name, description, price, quantity);
+	}
+
+	@Override
+	public void name() {	
+	
+	}
+	/**
+	 * sortAxe
+	 */
+	@Override
+	public int compareTo(Product product) {
+		int value = this.name.compareTo(product.name);
+		if(value == 0) {
+			return this.name.compareTo(product.name);
+		} else {
+			return value;
+		}
+	}
+}
